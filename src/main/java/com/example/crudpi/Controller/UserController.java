@@ -40,6 +40,6 @@ public class UserController {
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return "Utilisateur supprimé avec succès";
-        access sqd
+
     }
 }
