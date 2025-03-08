@@ -1,49 +1,48 @@
 package com.example.crudpi.service;
 
+import com.example.crudpi.Interface.IUser; // Importer l'interface
 import com.example.crudpi.entity.User;
 import com.example.crudpi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
-
-    private final UserRepository userRepository;
+public class UserService implements IUser { // Implémenter l'interface IUser
 
     @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
-    /**
-     * Récupère tous les utilisateurs.
-     * @return Une liste de tous les utilisateurs.
-     */
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    @Autowired
+    private PasswordService passwordService;
 
-    /**
-     * Récupère un utilisateur par son ID.
-     * @param id L'ID de l'utilisateur.
-     * @return L'utilisateur correspondant à l'ID.
-     */
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    /**
-     * Sauvegarde un utilisateur.
-     * @param user L'utilisateur à sauvegarder.
-     * @return L'utilisateur sauvegardé.
-     */
+    @Override
     public User saveUser(User user) {
+        // Crypter le mot de passe avant de sauvegarder
+        String encryptedPassword = passwordService.encryptPassword(user.getPassword());
+        user.setPassword(encryptedPassword);
         return userRepository.save(user);
+    }
+
+    @Override
+    public void deleteUser(User user) {
+        // Supprimer l'utilisateur directement
+        userRepository.delete(user);
+    }
+
+    @Override
+    public User getUser(int id) {
+        // Récupérer l'utilisateur par son ID
+        Optional<User> userOptional = userRepository.findById((long) id); // Convertir int en Long
+        return userOptional.orElseThrow(() -> new IllegalArgumentException("Utilisateur avec ID " + id + " non trouvé !"));
+    }
+
+    @Override
+    public List<User> getUsers() {
+        // Récupérer tous les utilisateurs
+        return userRepository.findAll();
     }
 
     /**
@@ -51,31 +50,24 @@ public class UserService {
      * @param id L'ID de l'utilisateur à mettre à jour.
      * @param newUser Les nouvelles données de l'utilisateur.
      * @return L'utilisateur mis à jour.
-     * @throws ResponseStatusException Si l'utilisateur n'est pas trouvé.
+     * @throws IllegalArgumentException Si l'utilisateur n'est pas trouvé.
      */
-    public User updateUser(Long id, User newUser) {
-        return userRepository.findById(id)
+    public User updateUser(int id, User newUser) {
+        return userRepository.findById((long) id) // Convertir int en Long
                 .map(user -> {
-                    if (newUser.getFirstName() != null) user.setFirstName(newUser.getFirstName());
-                    if (newUser.getLastName() != null) user.setLastName(newUser.getLastName());
-                    if (newUser.getEmail() != null) user.setEmail(newUser.getEmail());
-                    if (newUser.getPassword() != null) user.setPassword(newUser.getPassword());
-                    if (newUser.getnTel() != null) user.setnTel(newUser.getnTel());
-                    if (newUser.getNumPasseport() != null) user.setNumPasseport(newUser.getNumPasseport());
-                    if (newUser.getRole() != null) user.setRole(newUser.getRole());
-                    return userRepository.save(user);
-                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur avec ID " + id + " non trouvé !"));
-    }
+                    user.setFirstName(newUser.getFirstName());
+                    user.setLastName(newUser.getLastName());
+                    user.setEmail(newUser.getEmail());
 
-    /**
-     * Supprime un utilisateur par son ID.
-     * @param id L'ID de l'utilisateur à supprimer.
-     * @throws ResponseStatusException Si l'utilisateur n'est pas trouvé.
-     */
-    public void deleteUser(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Utilisateur avec ID " + id + " non trouvé !");
-        }
-        userRepository.deleteById(id);
+                    // Crypter le nouveau mot de passe s'il est fourni
+                    if (newUser.getPassword() != null) {
+                        user.setPassword(passwordService.encryptPassword(newUser.getPassword()));
+                    }
+
+                    user.setnTel(newUser.getnTel());
+                    user.setNumPasseport(newUser.getNumPasseport());
+                    user.setRole(newUser.getRole());
+                    return userRepository.save(user);
+                }).orElseThrow(() -> new IllegalArgumentException("Utilisateur avec ID " + id + " non trouvé !"));
     }
 }
