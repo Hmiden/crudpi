@@ -14,6 +14,7 @@
 
   <label for="nTel">Phone Number:</label>
   <input id="nTel" formControlName="nTel" required>
+  
 
   <label for="numPasseport">Passport Number:</label>
   <input id="numPasseport" formControlName="numPasseport" required>
@@ -25,6 +26,8 @@
       <option value="USER">User</option>
       <option value="ADMIN">Admin</option>
       <option value="GUIDE">Guide</option>
+      <option value="PARTNER">Partner</option> <!-- Added Partner role -->
+
   </select>
 
   <button type="submit" [disabled]="userForm.invalid">Ajouter</button>

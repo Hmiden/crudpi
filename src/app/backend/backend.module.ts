@@ -10,6 +10,7 @@ import { AddUserComponent } from '../backend/pages/adduser/adduser.component';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { BackComponent } from './pages/back/back.component';
 import { ListeguideComponent } from './pages/listeguide/listeguide.component';
+import { EditUserComponent } from './pages/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, children: [
@@ -18,7 +19,9 @@ const routes: Routes = [
 
     { path: 'addguide', component: AddguideComponent },
     { path: 'adduser', component: AddUserComponent },
-    { path: 'user-list', component: UserListComponent }
+    { path: 'user-list', component: UserListComponent },
+    { path: 'edit-user/:id', component: EditUserComponent }
+
   ]},
   { path: 'guide', component: GuideComponent }
 ];
@@ -31,6 +34,7 @@ const routes: Routes = [
     UserListComponent,
     BackComponent,
     ListeguideComponent,
+    EditUserComponent,
     
   ],
   imports: [

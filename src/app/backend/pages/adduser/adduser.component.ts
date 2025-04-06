@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/models/user.model';
@@ -18,7 +18,7 @@ export class AddUserComponent {
       lastName: [''],
       email: [''],
       password: [''],
-      nTel: [''],
+      nTel: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       numPasseport: [''],
       role: ['USER'] // Default role to prevent errors
     });

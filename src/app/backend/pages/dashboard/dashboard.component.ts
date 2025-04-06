@@ -3,10 +3,15 @@ import { Router } from '@angular/router';
 
 interface User {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  password: string;
+  nTel: string;
+  numPasseport: string;
   role: string;
 }
+
 
 @Component({
   selector: 'app-dashboard',
@@ -14,16 +19,33 @@ interface User {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-  // Sample user data - replace with actual data from your service
+  // Exemple de données utilisateur (tu peux remplacer par des données dynamiques via service)
   users: User[] = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'Editor' }
+    {
+      id: 1,
+      firstName: 'Ali',
+      lastName: 'Ben Salah',
+      email: 'ali.ben@example.com',
+      password: 'password123',
+      nTel: '12345678',
+      numPasseport: 'AB123456',
+      role: 'ADMIN'
+    },
+    {
+      id: 2,
+      firstName: 'Leila',
+      lastName: 'Mansour',
+      email: 'leila.mansour@example.com',
+      password: 'password123',
+      nTel: '87654321',
+      numPasseport: 'CD789012',
+      role: 'GUIDE'
+    }
   ];
 
   constructor(private router: Router) {}
 
-  // Check if current route is user management
+  // Pour afficher ou cacher certains éléments selon la route
   get isUserManagementPage(): boolean {
     return this.router.url.includes('/list-users') || 
            this.router.url.includes('/add-user');
