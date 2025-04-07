@@ -16,6 +16,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+import { BlogComponent } from './pages/blog/blog.component';
 
 const routes: Routes = [
   
@@ -37,6 +38,8 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent},
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'blog', component: BlogComponent },
+
 
   // À propos
 ];
@@ -53,6 +56,7 @@ const routes: Routes = [
     RegisterComponent,
     ResetPasswordComponent,
     ForgotPasswordComponent,
+    BlogComponent,
   ],
   imports: [
     FormsModule,

@@ -30,7 +30,7 @@ export class UserService {
     return this.http.get<User>(`${this.getone}/${id}`);
   }
   deleteUser(userId: number): Observable<any> {
-    const url = `${this.apiUrl}/users/${userId}`;
+    const url = `${this.delete}/${userId}`;
     return this.http.delete(url);
   }
   
