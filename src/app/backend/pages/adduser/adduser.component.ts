@@ -30,7 +30,7 @@ export class AddUserComponent {
       console.log("Sending user data:", newUser); // Debugging output
       this.userService.adduser(newUser).subscribe(response => {
         console.log('Utilisateur ajouté avec succès', response);
-        this.router.navigate(['/users']);
+        this.router.navigate(['/dashboard/user-list']); // Redirect to the user list page after successful addition
       }, error => {
         console.error('Erreur lors de l\'ajout de l\'utilisateur', error);
       });

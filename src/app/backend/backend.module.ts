@@ -6,23 +6,27 @@ import { HttpClientModule } from '@angular/common/http';
 import { AddguideComponent } from './pages/addguide/addguide.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GuideComponent } from '../frontend/pages/guide/guide.component';
-import { AddUserComponent } from '../backend/pages/adduser/adduser.component';
+import { AddUserComponent } from './pages/adduser/adduser.component';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { BackComponent } from './pages/back/back.component';
 import { ListeguideComponent } from './pages/listeguide/listeguide.component';
 import { EditUserComponent } from './pages/edit-user/edit-user.component';
+import { AuthGuard } from '../auth.guard'; 
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, children: [
-    {path: 'back',component : BackComponent},
-    {path: 'listeguide',component : ListeguideComponent},
-
-    { path: 'addguide', component: AddguideComponent },
-    { path: 'adduser', component: AddUserComponent },
-    { path: 'user-list', component: UserListComponent },
-    { path: 'edit-user/:id', component: EditUserComponent }
-
-  ]},
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard], 
+    children: [
+      { path: 'back', component: BackComponent },
+      { path: 'listeguide', component: ListeguideComponent },
+      { path: 'addguide', component: AddguideComponent },
+      { path: 'adduser', component: AddUserComponent },
+      { path: 'user-list', component: UserListComponent },
+      { path: 'edit-user/:id', component: EditUserComponent }
+    ]
+  },
   { path: 'guide', component: GuideComponent }
 ];
 
@@ -34,8 +38,7 @@ const routes: Routes = [
     UserListComponent,
     BackComponent,
     ListeguideComponent,
-    EditUserComponent,
-    
+    EditUserComponent
   ],
   imports: [
     CommonModule,
@@ -45,4 +48,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class BackendModule { }
+export class BackendModule {}

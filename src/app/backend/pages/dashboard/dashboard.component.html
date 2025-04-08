@@ -12,6 +12,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom CSS -->
 </head>
+<div class="header">
+    <div class="user-info" style="float: right; padding: 10px;">
+      Connecté en tant que : <strong>{{ email }}</strong>
+      <button (click)="logout()">Déconnexion</button>
+    </div>
+  </div>
+  
 <body>
     <div class="dashboard-container">
         <!-- ========== SIDEBAR ========== -->
