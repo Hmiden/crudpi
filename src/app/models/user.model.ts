@@ -9,7 +9,10 @@ export interface User {
     nTel?: string;
     numPasseport?: string;
     role?: Role;
+    
     authProvider?: 'LOCAL' | 'GOOGLE';
+    message?: string; // <-- Add this
+
     hebergements?: Hebergement[];
 }
 

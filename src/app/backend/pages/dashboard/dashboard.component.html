@@ -12,27 +12,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Custom CSS -->
 </head>
-<div class="header">
-    <div class="user-info" style="float: right; padding: 10px;">
-      Connecté en tant que : <strong>{{ email }}</strong>
-      <button (click)="logout()">Déconnexion</button>
-    </div>
-  </div>
-  
+
 <body>
     <div class="dashboard-container">
+        <!-- Header with user info and logout -->
+        <div class="header">
+            <div class="user-info" style="float: right; padding: 10px;">
+                Connecté en tant que : <strong>{{ email }}</strong>
+                <button (click)="logout()">Déconnexion</button>
+                <button (click)="togglePendingUsers()" class="pending-users-btn">
+                    {{ showPendingUsers ? 'Hide Pending Users' : 'Show Pending Users' }}
+                </button>
+            </div>
+        </div>
+
         <!-- ========== SIDEBAR ========== -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
             </div>
             
-           
-
             <div class="user-panel">
                 <img src="/src/app/backend/pages/dashboard/salahpic.jpg" alt="User Image"
                 class="user rounded-circle mx-auto mb-3"
-                alt="{{   'user' }}"
+                alt="{{ 'user' }}"
                 style="width: 120px; height: 120px; object-fit: cover;">
                <div class="user-info">
                 <span class="user-name">SALAH </span>
@@ -86,17 +89,35 @@
                         <span>Store Management</span>
                     </a>
                 </li>
-              
             </ul>
         </aside>
 
         <!-- ========== MAIN CONTENT ========== -->
         <main class="main-content">
+            <!-- Pending users section - placed at the top of main content -->
+            <div *ngIf="showPendingUsers" class="pending-users-section">
+                <h3><i class="fas fa-user-clock"></i> Pending User Approvals</h3>
+                <div *ngIf="pendingUsers.length === 0" class="no-pending-users">
+                    No pending user registrations
+                </div>
+                <div *ngFor="let user of pendingUsers" class="pending-user-card">
+                    <div class="user-info">
+                        <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+                        <span class="user-email">{{ user.email }}</span>
+                        <span class="user-status">{{ user.status }}</span>
+                    </div>
+                    <div class="user-actions">
+                        <button (click)="approveUser(user.id!)" class="approve-btn">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button (click)="rejectUser(user.id!)" class="reject-btn">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             <router-outlet></router-outlet>
-<br>
-<br>
-<br>
 
             <header class="main-header">
                 <div class="header-left">

@@ -14,6 +14,7 @@ export interface LoginResponse {
     lastName: string;
     role: string;
   };
+  message?: string; // Optional message property
 }
 
 @Injectable({
@@ -44,18 +45,26 @@ export class AuthService {
     return null;
   }
   
+  
 
   login(email: string, password: string): Observable<boolean> {
     return this.http.post<LoginResponse>(this.loginUrl, { email, password }).pipe(
       map(response => {
+        if (response.message) {
+          this.errorMessage = response.message;
+          console.warn('Login message:', response.message);
+          return false;
+        }
+  
         if (response.token && response.user) {
           localStorage.setItem(this.tokenKey, response.token);
           localStorage.setItem('role', response.user.role);
           localStorage.setItem('user', JSON.stringify(response.user));
-
+  
           this.userSubject.next(response.token);
           return true;
         }
+  
         return false;
       }),
       catchError(err => {
@@ -65,7 +74,7 @@ export class AuthService {
       })
     );
   }
-
+  
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(`${this.Reset}/forgot-password`, null, {
       params: { email }

@@ -6,7 +6,6 @@ import { AboutComponent } from './pages/about/about.component';
 import { OffersComponent } from './pages/offers/offers.component';
 import { NewsComponent } from './pages/news/news.component';
 import { ContactComponent } from './pages/contact/contact.component';
-import { GuideComponent } from './pages/guide/guide.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -17,17 +16,34 @@ import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { BlogComponent } from './pages/blog/blog.component';
-
+import { AfficherplanningComponent } from './pages/afficherplanning/afficherplanning.component';
+import { ReservationGuideComponent } from './pages/reservationguide/reservationguide.component';
+import { DetailsreservationComponent } from './pages/detailsreservation/detailsreservation.component';
+import { GuideComponent } from './pages/guide/guide.component';
+import { ListGReservationComponent } from './pages/list-greservation/list-greservation.component';
+import { EditreservationComponent } from './pages/editreservation/editreservation.component';
+import { ListereservationsComponent } from './pages/accessGuide/listereservations/listereservations.component';
 const routes: Routes = [
   
   
   {
     path: '', component: HomeComponent, // Layout parent
     children: [
+      
       { path: 'guide', component: GuideComponent },
-     
+      {path: 'guidedetails/:id', component: GuideComponent ,children: [      {path: 'afficherplanning', component: AfficherplanningComponent },
+      ]},
+
+      { path: 'resguide', component:ReservationGuideComponent },
+      { path: 'reservationguidedetails/:id', component:DetailsreservationComponent },
+
+      { path: 'listereservationsguide', component:ListGReservationComponent },
+      { path: 'editreservation/:id', component:EditreservationComponent },
+      { path: 'reservationsbyguide', component: ListereservationsComponent},
+
     ]
   },
+
   { path: 'about', component: AboutComponent } ,
  { path: 'offers', component: OffersComponent},
  { path: 'news', component: NewsComponent},
@@ -46,6 +62,15 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    ListereservationsComponent,
+    ListGReservationComponent,
+    DetailsreservationComponent,
+    EditreservationComponent,
+    AfficherplanningComponent,
+    EditreservationComponent,
+    RegisterComponent,
+    ResetPasswordComponent, 
+    ForgotPasswordComponent,
     HomeComponent,
     AboutComponent,
     OffersComponent,
@@ -53,9 +78,12 @@ const routes: Routes = [
     ContactComponent,
     GuideComponent,
     LoginComponent,
-    RegisterComponent,
-    ResetPasswordComponent,
-    ForgotPasswordComponent,
+    BlogComponent,
+    DetailsreservationComponent,
+    BlogComponent,
+    ReservationGuideComponent,
+    BlogComponent,
+    AfficherplanningComponent,
     BlogComponent,
   ],
   imports: [
@@ -63,7 +91,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     HttpClientModule ,
-    ReactiveFormsModule
+    ReactiveFormsModule,
    // Enregistrer les routes pour le frontend
   ],
  /*  providers: [ {

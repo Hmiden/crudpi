@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BackendModule } from './backend/backend.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Ajout du ReactiveFormsModule
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,3 +29,5 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Ajout du R
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+
