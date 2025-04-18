@@ -6,6 +6,7 @@ import { FrontendModule } from './frontend/frontend.module';  // Import du modul
 import { HttpClientModule } from '@angular/common/http';
 import { BackendModule } from './backend/backend.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Ajout du ReactiveFormsModule
+import { RecaptchaModule } from 'ng-recaptcha'; // Importation du module reCAPTCHA
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Ajout du R
     BackendModule,
     HttpClientModule,
     ReactiveFormsModule,
+    RecaptchaModule, // Importation du module reCAPTCHA
     
     // Importation du module Frontend
   ],

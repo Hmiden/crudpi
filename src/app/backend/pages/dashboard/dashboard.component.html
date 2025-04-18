@@ -1,241 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Custom CSS -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4e73df;
+      --secondary: #858796;
+      --success: #1cc88a;
+      --info: #36b9cc;
+      --warning: #f6c23e;
+      --danger: #e74a3b;
+      --light: #f8f9fc;
+      --dark: #5a5c69;
+      --sidebar-bg: #1f2d3d;
+      --sidebar-text: #d1d5db;
+      --sidebar-active: #334155;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: var(--light);
+      color: #333;
+    }
+
+    .dashboard-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 1.3rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .user-panel img {
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    .user-info {
+      text-align: center;
+    }
+
+    .user-name {
+      font-weight: bold;
+      color: white;
+    }
+
+    .user-role {
+      font-size: 0.9rem;
+      color: var(--sidebar-text);
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    .sidebar-menu li a,
+    .sidebar-menu li button {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      width: 100%;
+      color: inherit;
+      background: none;
+      border: none;
+      text-align: left;
+      gap: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sidebar-menu li a:hover,
+    .sidebar-menu li button:hover {
+      background-color: var(--sidebar-active);
+      color: #fff;
+    }
+
+    .sidebar-menu li a.active {
+      background-color: var(--primary);
+      color: #fff;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 15px 20px;
+      background: #fff;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .header .user-info {
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header button {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .dashboard-stats {
+      padding: 20px;
+    }
+
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .pending-users-section {
+      padding: 0 20px 20px;
+    }
+
+    .pending-user-card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-actions button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .approve-btn {
+      background-color: var(--success);
+    }
+
+    .reject-btn {
+      background-color: var(--danger);
+    }
+  </style>
 </head>
 
 <body>
-    <div class="dashboard-container">
-        <!-- Header with user info and logout -->
-        <div class="header">
-            <div class="user-info" style="float: right; padding: 10px;">
-                Connecté en tant que : <strong>{{ email }}</strong>
-                <button (click)="logout()">Déconnexion</button>
-                <button (click)="togglePendingUsers()" class="pending-users-btn">
-                    {{ showPendingUsers ? 'Hide Pending Users' : 'Show Pending Users' }}
-                </button>
-            </div>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span>Admin Panel</span>
+      </div>
+
+      <div class="user-panel">
+        <img src="/src/app/backend/pages/dashboard/salahpic.jpg" alt="User Image" />
+        <div class="user-info">
+          <span class="user-name">SALAH</span>
+          <span class="user-role">SALAH HMIDEN</span>
         </div>
+      </div>
 
-        <!-- ========== SIDEBAR ========== -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-shield-alt"></i> Admin Panel</h3>
-            </div>
-            
-            <div class="user-panel">
-                <img src="/src/app/backend/pages/dashboard/salahpic.jpg" alt="User Image"
-                class="user rounded-circle mx-auto mb-3"
-                alt="{{ 'user' }}"
-                style="width: 120px; height: 120px; object-fit: cover;">
-               <div class="user-info">
-                <span class="user-name">SALAH </span>
-                <span class="user-role">SALAH HMIDEN</span>
-            </div>
-            </div>
-            
-            <ul class="sidebar-menu">
-                <li>
-                    <a routerLink="/dashboard/user-list" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Users Management</span>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="/dashboard/listeguide" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Guides Management</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a routerLink="/dashboard" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Accommodations Management</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a routerLink="/dashboard" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Restaurants Management</span>
-                    </a>
-                </li>
-                
-                <li>
-                    <a routerLink="/dashboard" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Blogs Management</span>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="/dashboard" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Transports Management</span>
-                    </a>
-                </li>
-                <li>
-                    <a routerLink="/dashboard" routerLinkActive="active">
-                        <i class="fas fa-tachometer-alt"></i>
-                        <span>Store Management</span>
-                    </a>
-                </li>
-            </ul>
-        </aside>
+      <ul class="sidebar-menu">
+        <li>
+          <a [routerLink]="['/dashboard/user-list']" routerLinkActive="active">
+            <i class="fas fa-users"></i> Users Management
+          </a>
+        </li>
+        <li>
+          <button (click)="togglePendingUsers()">
+            <i class="fas fa-user-clock"></i>
+            {{ showPendingUsers ? 'Hide Pending Users' : 'Show Pending Users' }}
+          </button>
+        </li>
+        <li><a [routerLink]="['/dashboard/listeguide']" routerLinkActive="active"><i class="fas fa-map"></i> Guides Management</a></li>
+        <li><a [routerLink]="['/dashboard/gastronomy']" routerLinkActive="active"><i class="fas fa-hotel"></i> Gastronomy Management</a></li>
+        <li><a [routerLink]="['/dashboard']" routerLinkActive="active"><i class="fas fa-utensils"></i> Restaurants</a></li>
+        <li><a [routerLink]="['/dashboard']" routerLinkActive="active"><i class="fas fa-blog"></i> Blogs</a></li>
+        <li><a [routerLink]="['/dashboard']" routerLinkActive="active"><i class="fas fa-bus"></i> Transports</a></li>
+        
+        <!-- Replaced "Store" with Logout -->
+        <li (click)="logout()" style="cursor: pointer;">
+          <a><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+        
+      </ul>
+    </aside>
 
-        <!-- ========== MAIN CONTENT ========== -->
-        <main class="main-content">
-            <!-- Pending users section - placed at the top of main content -->
-            <div *ngIf="showPendingUsers" class="pending-users-section">
-                <h3><i class="fas fa-user-clock"></i> Pending User Approvals</h3>
-                <div *ngIf="pendingUsers.length === 0" class="no-pending-users">
-                    No pending user registrations
-                </div>
-                <div *ngFor="let user of pendingUsers" class="pending-user-card">
-                    <div class="user-info">
-                        <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-                        <span class="user-email">{{ user.email }}</span>
-                        <span class="user-status">{{ user.status }}</span>
-                    </div>
-                    <div class="user-actions">
-                        <button (click)="approveUser(user.id!)" class="approve-btn">
-                            <i class="fas fa-check"></i> Approve
-                        </button>
-                        <button (click)="rejectUser(user.id!)" class="reject-btn">
-                            <i class="fas fa-times"></i> Reject
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <main class="main-content">
+        <div class="header custom-header">
+          <div class="user-info">
+            Connecté en tant que : <strong>{{ email }}</strong>
+          </div>
+        </div>
+    
+      
 
-            <router-outlet></router-outlet>
+      <div class="dashboard-stats">
+        <h3>Dashboard Statistics</h3>
+        <div *ngIf="statsLoading">Loading statistics...</div>
+        <div *ngIf="statsError">{{ statsError }}</div>
 
-            <header class="main-header">
-                <div class="header-left">
-                    <h1>Dashboard Overview</h1>
-                </div>
-                <div class="header-right">
-                    <div class="search-box">
-                        <input type="text" placeholder="Search...">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="notifications">
-                        <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
-                    </div>
-                </div>
-            </header>
+        <div *ngIf="stats && !statsLoading" class="stats-summary">
+          <div class="stat-item">
+            <h4>Total Users</h4>
+            <p>{{ stats.userCounts.total }}</p>
+          </div>
+          <div class="stat-item">
+            <h4>New This Month</h4>
+            <p>{{ stats.userCounts.newThisMonth }}</p>
+          </div>
+          <div class="stat-item">
+            <h4>Guides</h4>
+            <p>{{ stats.userCounts.guides }}</p>
+          </div>
+          <div class="stat-item">
+            <h4>Travelers</h4>
+            <p>{{ stats.userCounts.travelers }}</p>
+          </div>
+          <div class="stat-item">
+            <h4>Partners</h4>
+            <p>{{ stats.userCounts.partners }}</p>
+          </div>
+        </div>
+      </div>
 
-            <div class="stats-cards">
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: #4e73df;">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>1,254</h3>
-                        <p>Total Users</p>
-                    </div>
-                    <div class="stat-progress">
-                        <div class="progress-bar" style="width: 75%; background-color: #4e73df;"></div>
-                    </div>
-                </div>
+      <div *ngIf="showPendingUsers" class="pending-users-section">
+        <h3><i class="fas fa-user-clock"></i> Pending User Approvals</h3>
+        <div *ngIf="pendingUsers.length === 0">No pending user registrations</div>
+        <div *ngFor="let user of pendingUsers" class="pending-user-card">
+          <div class="user-info">
+            <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+            <span class="user-email">{{ user.email }}</span>
+            <span class="user-status">{{ user.status }}</span>
+          </div>
+          <div class="user-actions">
+            <button (click)="approveUser(user.id!)" class="approve-btn"><i class="fas fa-check"></i> Approve</button>
+            <button (click)="rejectUser(user.id!)" class="reject-btn"><i class="fas fa-times"></i> Reject</button>
+          </div>
+        </div>
+      </div>
 
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: #1cc88a;">
-                        <i class="fas fa-hotel"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>342</h3>
-                        <p>Accommodations</p>
-                    </div>
-                    <div class="stat-progress">
-                        <div class="progress-bar" style="width: 60%; background-color: #1cc88a;"></div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: #36b9cc;">
-                        <i class="fas fa-map-marked-alt"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>89</h3>
-                        <p>Guides</p>
-                    </div>
-                    <div class="stat-progress">
-                        <div class="progress-bar" style="width: 45%; background-color: #36b9cc;"></div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon" style="background-color: #f6c23e;">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <div class="stat-info">
-                        <h3>$24,500</h3>
-                        <p>Revenue</p>
-                    </div>
-                    <div class="stat-progress">
-                        <div class="progress-bar" style="width: 85%; background-color: #f6c23e;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="charts-row">
-                <div class="chart-container">
-                    <h3>User Growth</h3>
-                    <canvas id="userChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Revenue Sources</h3>
-                    <canvas id="revenueChart"></canvas>
-                </div>
-            </div>
-
-            <div class="recent-activity">
-                <h3>Recent Activity</h3>
-                <div class="activity-list">
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background-color: #4e73df;">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="activity-details">
-                            <p><strong>5 new users</strong> registered today</p>
-                            <span class="activity-time">2 hours ago</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background-color: #1cc88a;">
-                            <i class="fas fa-hotel"></i>
-                        </div>
-                        <div class="activity-details">
-                            <p><strong>3 new accommodations</strong> added</p>
-                            <span class="activity-time">5 hours ago</span>
-                        </div>
-                    </div>
-                    <div class="activity-item">
-                        <div class="activity-icon" style="background-color: #f6c23e;">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="activity-details">
-                            <p><strong>$2,500</strong> in new bookings</p>
-                            <span class="activity-time">1 day ago</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Custom JS -->
-    <script src="js/script.js"></script>
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </body>
+
 </html>

@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthGuard } from '../auth.guard';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
+import { RecaptchaModule } from 'ng-recaptcha';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 import { BlogComponent } from './pages/blog/blog.component';
@@ -23,6 +24,10 @@ import { GuideComponent } from './pages/guide/guide.component';
 import { ListGReservationComponent } from './pages/list-greservation/list-greservation.component';
 import { EditreservationComponent } from './pages/editreservation/editreservation.component';
 import { ListereservationsComponent } from './pages/accessGuide/listereservations/listereservations.component';
+import { GastronomiesComponent } from './pages/gastronomies/gastronomies.component';
+import { MenusPlatsComponent } from './pages/menus-plats/menus-plats.component';
+import { DashboardPartnerComponent } from '../backend/pages/dashboard-partner/dashboard-partner.component';
+
 const routes: Routes = [
   
   
@@ -33,9 +38,12 @@ const routes: Routes = [
       { path: 'guide', component: GuideComponent },
       {path: 'guidedetails/:id', component: GuideComponent ,children: [      {path: 'afficherplanning', component: AfficherplanningComponent },
       ]},
+      { path: 'gastronomies', component: GastronomiesComponent },
+      { path: 'menus-plats/:gastronomyId',  component: MenusPlatsComponent },
 
       { path: 'resguide', component:ReservationGuideComponent },
       { path: 'reservationguidedetails/:id', component:DetailsreservationComponent },
+
 
       { path: 'listereservationsguide', component:ListGReservationComponent },
       { path: 'editreservation/:id', component:EditreservationComponent },
@@ -43,6 +51,8 @@ const routes: Routes = [
 
     ]
   },
+  { path: 'gastronomies', component: GastronomiesComponent},
+
 
   { path: 'about', component: AboutComponent } ,
  { path: 'offers', component: OffersComponent},
@@ -55,6 +65,9 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'blog', component: BlogComponent },
+      { path: 'partnerdashboard', component: DashboardPartnerComponent },
+      { path: 'chat', component: HomeComponent },
+
 
 
   // À propos
@@ -84,7 +97,9 @@ const routes: Routes = [
     ReservationGuideComponent,
     BlogComponent,
     AfficherplanningComponent,
-    BlogComponent,
+    BlogComponent,  
+    GastronomiesComponent,
+    MenusPlatsComponent,
   ],
   imports: [
     FormsModule,
@@ -92,6 +107,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     HttpClientModule ,
     ReactiveFormsModule,
+    RecaptchaModule, // Importation du module reCAPTCHA
    // Enregistrer les routes pour le frontend
   ],
  /*  providers: [ {

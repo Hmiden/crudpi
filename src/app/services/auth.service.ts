@@ -45,10 +45,19 @@ export class AuthService {
     return null;
   }
   
+  getUserIdByEmail(email: string): Observable<number> {
+    return this.http.get<number>(`http://localhost:8089/tourisme/auth/user-id`, {
+      params: { email }
+    });
+  }
   
 
-  login(email: string, password: string): Observable<boolean> {
-    return this.http.post<LoginResponse>(this.loginUrl, { email, password }).pipe(
+  login(email: string, password: string, recaptchaResponse: string): Observable<boolean> {
+    return this.http.post<LoginResponse>(this.loginUrl, {
+      email,
+      password,
+      recaptchaResponse // ✅ on l’ajoute ici
+    }).pipe(
       map(response => {
         if (response.message) {
           this.errorMessage = response.message;
